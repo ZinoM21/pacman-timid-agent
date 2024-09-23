@@ -13,7 +13,7 @@ class TimidAgent(Agent):
 
     def __init__(self):
         super().__init__()  # Call parent constructor
-        # Add anything else you think you need here
+        self.leftTurnAgent = LeftTurnAgent()  # Instantiate LeftTurnAgent
 
     def inDanger(self, pacman, ghost, dist=3):
         """inDanger(pacman, ghost) - Is the pacman in danger
@@ -98,4 +98,4 @@ class TimidAgent(Agent):
             
 
         # No danger -> behave like LeftTurnAgent
-        return LeftTurnAgent().getAction(state)
+        return self.leftTurnAgent.getAction(state)
