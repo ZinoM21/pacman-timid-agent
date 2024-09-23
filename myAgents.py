@@ -74,7 +74,7 @@ class TimidAgent(Agent):
 
         pacman = state.getPacmanState()
         ghosts = state.getGhostStates()
-        # legal = state.getLegalPacmanActions()
+        legal = state.getLegalPacmanActions()
 
         for ghost in ghosts:
             directionOfDanger = self.inDanger(pacman, ghost)
