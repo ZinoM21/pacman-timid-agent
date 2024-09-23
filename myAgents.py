@@ -2,6 +2,8 @@
 from pacman import Directions
 from game import Agent, Actions
 from pacmanAgents import LeftTurnAgent
+from util import manhattanDistance
+import math
 
 
 class TimidAgent(Agent):
@@ -25,14 +27,103 @@ class TimidAgent(Agent):
         If the pacman is in danger we return the direction to the ghost.
         """
 
-        # Your code
-        raise NotImplemented
+        # return early if ghost is scared (no danger then) -> avoids manhattanDistance() call
+        if ghost.isScared(): 
+            return Directions.STOP
+
+        pacmanPos = pacman.getPosition()
+        ghostPos = ghost.getPosition()
+
+        sameColumn = pacmanPos[0] == ghostPos[0]
+        sameRow = pacmanPos[1] == ghostPos[1]
+        
+        currentDist = manhattanDistance(pacmanPos, ghostPos)
+        # currentDist = math.sqrt((pacmanPos[0] - ghostPos[0])**2 + (pacmanPos[1] - ghostPos[1])**2)
+        agentsWithinRange = currentDist <= dist
+
+        # print("current dist", currentDist)
+
+        # check if in range & same row / column, and return direction to ghost
+        if agentsWithinRange:
+            if sameColumn:
+                if pacmanPos[1] < ghostPos[1]:
+                    return Directions.NORTH
+                else:
+                    return Directions.SOUTH
+            elif sameRow:
+                if pacmanPos[0] < ghostPos[0]:
+                    return Directions.EAST
+                else:
+                    return Directions.WEST
+               
+            
+        # no danger
+        return Directions.STOP
     
     def getAction(self, state):
         """
+        Make a decision based on the current game state:
+        If pacman is in danger, returns direction away from ghost (escape danger)
+        If pacman is not in danger, behaves like LeftTurnAgent
+        
         state - GameState
         
-        Fill in appropriate documentation
+        returns a valid action direction: North, East, South, West or
+        a Stop action when no legal actions are possible
         """
 
-        raise NotImplemented
+        pacman = state.getPacmanState()
+        ghosts = state.getGhostStates()
+        # legal = state.getLegalPacmanActions()
+
+        for ghost in ghosts:
+            directionOfDanger = self.inDanger(pacman, ghost)
+            print("direction of danger", directionOfDanger)
+            if directionOfDanger != Directions.STOP:
+                print("Pacman in danger! Escaping danger")
+                # in Danger! -> Escape danger
+
+                reverse = Directions.REVERSE[directionOfDanger]
+                left = Directions.LEFT[directionOfDanger]
+                right = Directions.RIGHT[directionOfDanger]
+
+                if reverse in legal:
+                    return reverse
+                elif left in legal:
+                    return left
+                elif right in legal:
+                    return right
+                elif directionOfDanger in legal:
+                    return directionOfDanger
+                else:
+                    return Directions.STOP
+            
+            else:
+                # No danger -> behave like LeftTurnAgent
+               return LeftTurnAgent().getAction(state)
+                #  # List of directions the agent can choose from
+
+                # # Get the agent's state from the game state and find agent heading
+                # heading = pacman.getDirection()
+
+                # if heading == Directions.STOP:
+                #     # Pacman is stopped, assume North (true at beginning of game)
+                #     heading = Directions.NORTH
+
+                # # Turn left if possible
+                # left = Directions.LEFT[heading]  # What is left based on current heading
+                # if left in legal:
+                #     action = left
+                # else:
+                #     # No left turn
+                #     if heading in legal:
+                #         action = heading  # continue in current direction
+                #     elif Directions.RIGHT[heading] in legal:
+                #         action = Directions.RIGHT[heading]  # Turn right
+                #     elif Directions.REVERSE[heading] in legal:
+                #         action = Directions.REVERSE[heading]  # Turn around
+                #     else:
+                #         action = Directions.STOP  # Can't move!
+
+                # return action
+        
