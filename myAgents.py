@@ -78,9 +78,7 @@ class TimidAgent(Agent):
 
         for ghost in ghosts:
             directionOfDanger = self.inDanger(pacman, ghost)
-            print("direction of danger", directionOfDanger)
             if directionOfDanger != Directions.STOP:
-                print("Pacman in danger! Escaping danger")
                 # in Danger! -> Escape danger
 
                 reverse = Directions.REVERSE[directionOfDanger]
@@ -98,32 +96,6 @@ class TimidAgent(Agent):
                 else:
                     return Directions.STOP
             
-            else:
-                # No danger -> behave like LeftTurnAgent
-               return LeftTurnAgent().getAction(state)
-                #  # List of directions the agent can choose from
 
-                # # Get the agent's state from the game state and find agent heading
-                # heading = pacman.getDirection()
-
-                # if heading == Directions.STOP:
-                #     # Pacman is stopped, assume North (true at beginning of game)
-                #     heading = Directions.NORTH
-
-                # # Turn left if possible
-                # left = Directions.LEFT[heading]  # What is left based on current heading
-                # if left in legal:
-                #     action = left
-                # else:
-                #     # No left turn
-                #     if heading in legal:
-                #         action = heading  # continue in current direction
-                #     elif Directions.RIGHT[heading] in legal:
-                #         action = Directions.RIGHT[heading]  # Turn right
-                #     elif Directions.REVERSE[heading] in legal:
-                #         action = Directions.REVERSE[heading]  # Turn around
-                #     else:
-                #         action = Directions.STOP  # Can't move!
-
-                # return action
-        
+        # No danger -> behave like LeftTurnAgent
+        return LeftTurnAgent().getAction(state)
