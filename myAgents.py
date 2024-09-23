@@ -33,18 +33,11 @@ class TimidAgent(Agent):
 
         pacmanPos = pacman.getPosition()
         ghostPos = ghost.getPosition()
-
         sameColumn = pacmanPos[0] == ghostPos[0]
         sameRow = pacmanPos[1] == ghostPos[1]
-        
-        currentDist = manhattanDistance(pacmanPos, ghostPos)
-        # currentDist = math.sqrt((pacmanPos[0] - ghostPos[0])**2 + (pacmanPos[1] - ghostPos[1])**2)
-        agentsWithinRange = currentDist <= dist
-
-        # print("current dist", currentDist)
 
         # check if in range & same row / column, and return direction to ghost
-        if agentsWithinRange:
+        if manhattanDistance(pacmanPos, ghostPos) <= dist:
             if sameColumn:
                 if pacmanPos[1] < ghostPos[1]:
                     return Directions.NORTH
