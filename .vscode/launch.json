@@ -18,7 +18,30 @@
       "request": "launch",
       "program": "${workspaceFolder}/pacman.py",
       "console": "integratedTerminal",
-      "args": ["--layout=mediumClassic", "--pacman=TimidAgent"],
+      "args": [
+        // "--layout=testClassic",
+        // "--pacman=TimidAgent"
+        "--layout=mediumClassic",
+        "--pacman=LeftTurnAgent"
+        // "--pacman=KeyboardAgent"
+        // "--pacman=GreedyAgent"
+      ],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Searchpacman",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/pacman.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--layout=mediumMaze",
+        // "--layout=tinyMaze",
+        "--pacman=SearchAgent",
+        "--agentArgs=search_fn=tinyMazeSearch"
+        // "--agentArgs=search_fn=depthFirstSearch"
+        // "--agentArgs=search_fn=aStarSearch"
+      ],
       "cwd": "${workspaceFolder}"
     }
   ]
