@@ -7,6 +7,7 @@ class Explored(object):
 
     def __init__(self):
         "__init__() - Create an empty explored set"
+        self.explored_set = set()
 
 
     def exists(self, state):
@@ -15,6 +16,7 @@ class Explored(object):
         :param state:  
         :return: True if already seen, False otherwise
         """
+        return state in self.explored_set
         
 
     def add(self, state):
@@ -23,4 +25,5 @@ class Explored(object):
         :param state:  
         :return: None
         """
+        self.explored_set.add(state)
 

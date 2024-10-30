@@ -18,6 +18,8 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+from explored import Explored
+import math
 
 class SearchProblem:
     """
@@ -157,10 +159,32 @@ def graph_search(problem, g, h, verbose=False, debug=False):
     :param h: Function for estimating cost from a SearchNode to a goal
     :param verbose: (Optional)
     :param debug: (Optional)
-    :return:
+    :return: List of actions for a solution, otherwise None
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    initial_state = problem.getStartState()
+    initial_node = SearchNode(problem, initial_state, None, None, g, h)
+
+    frontier = util.PriorityQueue()
+    frontier.push(initial_node, initial_node.get_f())
+
+    explored = Explored()
+
+    while not frontier.isEmpty():
+        node = frontier.pop()
+
+        if problem.isGoalState(node.get_state()):
+            actions = [action for state, action in node.get_path()[1:] if action is not None]
+            return actions
+
+        for child_state, action, stepCost in problem.getSuccessors(node.get_state()):
+            if not explored.exists(child_state):
+                explored.add(child_state)
+                child_node = SearchNode(problem, child_state, node, action, g, h)
+                frontier.push(child_node, child_node.get_f())
+
+    return None
+
 
 def tinyMazeSearch(problem):
     """
@@ -188,12 +212,12 @@ class DepthFirstSearch:
     @classmethod
     def g(cls, node: SearchNode):
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return 0
 
     @classmethod
     def h(cls, node: SearchNode, problem):
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return -node.get_depth()
 
     @classmethod
     def search(cls, problem):
@@ -212,7 +236,7 @@ class DepthFirstSearch:
         # e.g., cls.g to access the g function.
         
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return graph_search(problem, cls.g, cls.h)
 
 def depthFirstSearch(problem):
     """
@@ -233,12 +257,12 @@ class BreadthFirstSearch:
     @classmethod
     def g(cls, node: SearchNode):
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return node.get_depth()
         
     @classmethod
     def h(cls, node: SearchNode, problem):
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return 0
 
     @classmethod
     def search(cls, problem):
@@ -247,7 +271,7 @@ class BreadthFirstSearch:
         :return:  List of actions for a solution, or None
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return graph_search(problem, cls.g, cls.h)
 
 def breadthFirstSearch(problem):
     """
@@ -269,17 +293,19 @@ class AStarSearch:
     @classmethod
     def g(cls, node: SearchNode):
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return node.get_depth()
 
     @classmethod
-    def h(cls, node: SearchNode, problem : SearchProblem):
+    def h(cls, node: SearchNode, problem: SearchProblem):
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        pos_current_node = node.get_state()
+        pos_goal = problem.goal
+        return math.dist(pos_current_node, pos_goal)
 
     @classmethod
     def search(cls, problem):
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return graph_search(problem, cls.g, cls.h)
 
 def aStarSearch(problem):
     """
